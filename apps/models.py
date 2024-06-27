@@ -16,6 +16,17 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+class Siswa(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_siswa = db.Column(db.Integer, index=True)
+    name = db.Column(db.String(64), index=True, unique=False)
+    birth_date = db.Column(db.Date, nullable=False)
+    kelas = db.Column(db.String(10), nullable=False)
+
+    def __repr__(self):
+        return f'<Siswa {self.name}>'
+    
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
