@@ -6,3 +6,5 @@ class Config:
         'postgresql://postgres:root@127.0.0.1:5432/emokids-flask'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ASSETS_ROOT = os.environ.get('ASSETS_ROOT') or '/static/assets'
+    DEBUG = True
+    FLASK_ENV = 'development'
