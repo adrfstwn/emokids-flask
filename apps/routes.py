@@ -1,11 +1,12 @@
 from flask import render_template, flash, redirect, url_for, request, current_app
 from apps import db
-from apps.forms import LoginForm, RegistrationForm
+from apps.forms import LoginForm, RegistrationForm, ProfileForm
 from apps.models import User
 from apps.models import Siswa
 from flask_login import current_user, login_user, logout_user, login_required
 from urllib.parse import urlparse, urljoin
 from .decorators import admin_required
+from flask import abort
 
 # Home route
 @current_app.route('/')
@@ -103,25 +104,49 @@ def delete_data_siswa(id):
         flash('Terjadi kesalahan saat menghapus data siswa.', 'error')
     return redirect(url_for('data_siswa'))
 
+#profile
+@current_app.route('/profile/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def profile(user_id):
+    user = User.query.get_or_404(user_id)
+    
+    # Verifikasi bahwa pengguna yang sedang masuk hanya dapat mengakses profil mereka sendiri
+    if current_user.id != user_id:
+        abort(403)  # Mengembalikan error 403 Forbidden jika mencoba mengakses profil orang lain
+
+    form = ProfileForm(obj=user)  # Populate the form with user data
+
+    if form.validate_on_submit():
+        form.populate_obj(user)  # Update user object with form data
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('profile', user_id=user.id))
+
+    return render_template('accounts/profile.html', title='Profile', user=user, form=form)
+
 # Login route
 @current_app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        if not next_page or urlparse(next_page).netloc != '':
-            if user.role == 'admin':
-                next_page = url_for('admin_dashboard')
-            else:
-                next_page = url_for('index')
-        return redirect(next_page)
+        # Retrieve user based on username or email
+        user = User.query.filter((User.username == form.username_or_email.data) | (User.email == form.username_or_email.data)).first()
+
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            next_page = request.args.get('next')
+            if not next_page or urlparse(next_page).netloc != '':
+                if user.role == 'admin':
+                    next_page = url_for('admin_dashboard')
+                else:
+                    next_page = url_for('index')
+            return redirect(next_page)
+
+        flash('Invalid username or password', 'danger')
+
     return render_template('accounts/login.html', title='Sign In', form=form)
 
 # Logout route
@@ -145,3 +170,12 @@ def register():
         return redirect(url_for('login'))
     return render_template('accounts/register.html', title='Register', form=form)
 
+@current_app.errorhandler(403)
+def page_not_found(e):
+    return render_template('home/page-403.html'), 404
+@current_app.errorhandler(404)
+def page_not_found(e):
+    return render_template('home/page-404.html'), 404
+@current_app.errorhandler(500)
+def page_not_found(e):
+    return render_template('home/page-500.html'), 500

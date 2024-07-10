@@ -1,6 +1,6 @@
 {% extends "layouts/base-fullscreen.html" %}
 
-{% block title %} Login {% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}   
 
@@ -23,34 +23,55 @@
 
                     <h3 class="mb-4">Login</h3>
 
-                    <span class="mb-0 text-muted">
-                        {% if msg %}
-                            <span class="text-danger">{{ msg | safe }}</span>
-                        {% else %}
-                            Add your credentials
-                        {% endif %} 
-                    </span>
+                    {% if msg %}
+                        <span class="text-danger">{{ msg | safe }}</span>
+                    {% endif %}
 
                     <br />
                     <br />
 
-                    <form role="form" method="post" action="">
+                    <!-- Display form errors at the top -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field_errors in form.errors.values() %}
+                                    {% for error in field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <form role="form" method="post" action="{{ url_for('login') }}">
 
                         {{ form.hidden_tag() }}                    
 
                         <div class="input-group mb-3">
-                            {{ form.username(placeholder="Username or eMail", class="form-control") }}
+                            {{ form.username_or_email.label(class="sr-only") }}
+                            {{ form.username_or_email(placeholder="Username or Email", class="form-control") }}
+                            {% if form.username_or_email.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.username_or_email.errors[0] }}
+                                </div>
+                            {% endif %}
                         </div>
                         
                         <div class="input-group mb-4">
-                            {{ form.password(placeholder="Password", class="form-control", type="password") }}
+                            {{ form.password.label(class="sr-only") }}
+                            {{ form.password(placeholder="Password", class="form-control") }}
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.password.errors[0] }}
+                                </div>
+                            {% endif %}
                         </div>
                         
                         <button type="submit" name="login" class="btn btn-primary shadow-2 mb-4">Login</button>
 
                     </form>
 
-                    <p class="mb-0 text-muted">Don’t have an account? <a href="{{ url_for('register') }}" >Sign UP</a></p>
+                    <p class="mb-0 text-muted">Don’t have an account? <a href="{{ url_for('register') }}">Sign UP</a></p>
                     
                 </div>
             </div>
@@ -58,7 +79,7 @@
     </div>
 
     <style>
-         .video-bg {
+        .video-bg {
             position: fixed;
             top: 0;
             left: 0;

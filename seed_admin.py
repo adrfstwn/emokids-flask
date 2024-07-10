@@ -4,9 +4,9 @@ from apps.models import User
 def seed_admin():
     app = create_app()
     with app.app_context():
-        admin_username = 'admin'
-        admin_email = 'admin@example.com'
-        admin_password = 'adminpassword'
+        admin_username = 'emokids'
+        admin_email = 'emokids@gmail.com'
+        admin_password = '1234567890'
         
         # Check if the admin user already exists
         if not User.query.filter_by(username=admin_username).first():

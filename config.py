@@ -1,10 +1,8 @@
 import os
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql://root:@127.0.0.1:3306/emokids'
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    ASSETS_ROOT = os.environ.get('ASSETS_ROOT') or '/static/assets'
-    DEBUG = True
-    FLASK_ENV = 'development'
+    ASSETS_ROOT = os.environ.get('ASSETS_ROOT')
+    FLASK_ENV = os.environ.get('FLASK_ENV')
