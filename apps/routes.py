@@ -71,7 +71,7 @@ def add_data_siswa():
     return render_template('siswa/create_data_siswa.html', title='Tambah Data Siswa')
 
 # Route to edit data
-@current_app.route('/edit_data_siswa/<int:id>', methods=['GET', 'POST'])
+@current_app.route('/edit_data_siswa-<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def edit_data_siswa(id):
@@ -91,7 +91,7 @@ def edit_data_siswa(id):
             return "Internal Server Error", 500
     return render_template('siswa/edit_data_siswa.html', title='Edit Data Siswa', siswa=siswa)
 
-@current_app.route('/delete_data_siswa/<int:id>', methods=['POST'])
+@current_app.route('/delete_data_siswa-<int:id>', methods=['POST'])
 @login_required
 def delete_data_siswa(id):
     try:
@@ -105,7 +105,7 @@ def delete_data_siswa(id):
     return redirect(url_for('data_siswa'))
 
 #profile
-@current_app.route('/profile/<int:user_id>', methods=['GET', 'POST'])
+@current_app.route('/profile-<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def profile(user_id):
     user = User.query.get_or_404(user_id)

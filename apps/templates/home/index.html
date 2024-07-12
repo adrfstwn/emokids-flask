@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="card-block px-0 py-3">
                                     <div class="table-responsive">
-                                        <video id="video" class="camera-preview" autoplay></video>
+                                        <img id="video" class="camera-preview" width="640" height="480">
                                     </div>
                                 </div>
                             </div>
@@ -115,17 +115,9 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var video = document.getElementById('video');
-        
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-                video.srcObject = stream;
-                video.play();
-            });
-        } else {
-            alert("Sorry, your browser does not support getUserMedia.");
-        }
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('new_frame', function(data) {
+        document.getElementById('video').src = 'data:image/jpeg;base64,' + data.image;
     });
 </script>
 {% endblock javascripts %}
