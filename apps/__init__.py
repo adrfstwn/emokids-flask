@@ -22,6 +22,6 @@ def create_app():
 
     with app.app_context():
         from apps import routes, models
-        # Register blueprints or routes here if any
+        
 
     return app

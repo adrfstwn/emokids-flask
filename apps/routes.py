@@ -7,10 +7,12 @@ from flask_login import current_user, login_user, logout_user, login_required
 from urllib.parse import urlparse, urljoin
 from .decorators import admin_required
 from flask import abort
+from flask import request
 
 # Home route
 @current_app.route('/')
-
+    
+#index orang tua
 @current_app.route('/index')
 @login_required
 def index():
