@@ -38,17 +38,17 @@
                             </div>
                             <div class="card-block px-0 py-3">
                                 <div class="table-responsive">
-                                    <img id="video" class="camera-preview" width="640" height="480">
+                                    <img id="video" class="camera-preview" width="900" height="580">
                                 </div>
                             </div>
                         </div>
                         <div class="card">
                             <div class="card-header">
-                                <h5>Live Pose (*Real Time)</h5>
+                                <h5>Live Detect (*Real Time)</h5>
                             </div>
                             <div class="card-block px-0 py-3">
                                 <div class="table-responsive">
-                                    <img id="video" class="camera-preview" width="640" height="400">
+                                    <img id="video2" class="camera-preview" width="800" height="550">
                                 </div>
                             </div>
                         </div>
@@ -178,30 +178,16 @@
 <script>
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
+    socket.on('connect', function() {
+        console.log('Connected to SocketIO server');
+    });
+
     socket.on('new_frame', function(data) {
-        document.getElementById('video').src = 'data:image/jpeg;base64,' + data.image;
-        document.getElementById('video2').src = 'data:image/jpeg;base64,' + data.image;
+        console.log('Received new frame data');
+        document.getElementById('video').src = 'data:image/jpeg;base64,' + data.original_image;
+        document.getElementById('video2').src = 'data:image/jpeg;base64,' + data.detected_image;
     });
 
-    function sendPoseData(data) {
-        socket.emit('pose_data', data);
-    }
-
-    // Simulasi data pose yang akan dikirim
-    const poseData = {
-        timestamp: new Date(),
-        pose: "pose_name",
-        confidence: 0.95,
-        // Tambahkan data yang relevan lainnya
-    };
-
-    // Panggil fungsi ini setelah mendeteksi pose
-    sendPoseData(poseData);
-
-    // Socket.io event listener untuk menerima data dari server (jika diperlukan)
-    socket.on('response', (data) => {
-        console.log('Received response from server:', data);
-    });
 </script>
 {% endblock javascripts %}
 
