@@ -107,6 +107,8 @@
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
+    const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
     if (navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function(stream) {
@@ -124,6 +126,9 @@
             context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
             const imageData = canvas.toDataURL('image/jpeg');
 
+            // Emit the raw frame to the socket for user page
+            socket.emit('raw_frame', { raw_image: imageData.split(',')[1] });
+
             fetch('/process_image', {
                 method: 'POST',
                 headers: {
@@ -134,6 +139,8 @@
             .then(response => response.json())
             .then(data => {
                 document.getElementById('video2').src = data.detected_image;
+                // Emit the detected image to the socket for user page
+                socket.emit('detected_image', { detected_image: data.detected_image.split(',')[1] });
             })
             .catch(error => console.error('Error:', error));
 
@@ -145,7 +152,6 @@
         draw();
     });
 
-    const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
     socket.on('new_frame', function(data) {
         console.log('Received new frame data:', data);
         if (data.detected_image) {

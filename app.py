@@ -14,15 +14,21 @@ logging.basicConfig(level=logging.DEBUG)
 model = YOLO("ekspresi_ncnn_model")
 
 latest_frame_with_detection = None
+latest_raw_frame = None
 
 def process_image(image_data):
     global latest_frame_with_detection
+    global latest_raw_frame
 
     try:
         # Decode the base64 image data
         image_data = base64.b64decode(image_data)
         np_arr = np.frombuffer(image_data, np.uint8)
         frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+        # Save the raw frame
+        _, buffer = cv2.imencode('.jpg', frame)
+        latest_raw_frame = base64.b64encode(buffer).decode('utf-8')
 
         # Process detection
         frame_with_detection = frame.copy()
@@ -70,7 +76,12 @@ def process_image_route():
 
 def send_frame():
     global latest_frame_with_detection
+    global latest_raw_frame
     while True:
+        if latest_raw_frame is not None:
+            socketio.emit('raw_frame', {
+                'raw_image': latest_raw_frame
+            })
         if latest_frame_with_detection is not None:
             socketio.emit('new_frame', {
                 'detected_image': latest_frame_with_detection

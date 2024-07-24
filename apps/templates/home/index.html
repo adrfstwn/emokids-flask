@@ -1,8 +1,7 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Dashboard {% endblock %} 
+{% block title %} Dashboard {% endblock %}
 
-<!-- Specific CSS goes HERE -->
 {% block stylesheets %}
 <style>
     .card {
@@ -40,7 +39,7 @@
                             </div>
                             <div class="card-block px-0 py-3">
                                 <div class="table-responsive">
-                                    <video id="videoElement" class="camera-preview" width="800" height="500" autoplay></video>
+                                    <img id="videoElement" class="camera-preview" width="800" height="500">
                                 </div>
                             </div>
                         </div>
@@ -100,63 +99,30 @@
 
 {% endblock content %}
 
-<!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
 <script>
-    const videoElement = document.getElementById('videoElement');
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
+    const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function(stream) {
-                videoElement.srcObject = stream;
-            })
-            .catch(function(err) {
-                console.log("Something went wrong: " + err);
-            });
-    } else {
-        alert('getUserMedia not supported on your browser!');
-    }
-
-    videoElement.addEventListener('play', function() {
-        const draw = () => {
-            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-            const imageData = canvas.toDataURL('image/jpeg');
-
-            fetch('/process_image', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ image: imageData })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('video2').src = data.detected_image;
-            })
-            .catch(error => console.error('Error:', error));
-
-            setTimeout(draw, 100); // Adjust the interval as needed
-        };
-
-        canvas.width = videoElement.videoWidth;
-        canvas.height = videoElement.videoHeight;
-        draw();
+    socket.on('raw_frame', function(data) {
+        console.log('Received raw frame data:', data);
+        if (data.raw_image) {
+            const imgSrc = 'data:image/jpeg;base64,' + data.raw_image;
+            document.getElementById('videoElement').src = imgSrc;
+        } else {
+            console.log('No raw_image in data');
+        }
     });
 
-    const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
     socket.on('new_frame', function(data) {
         console.log('Received new frame data:', data);
         if (data.detected_image) {
-            // Prefix the base64 string with the appropriate data URL prefix
             const imgSrc = 'data:image/jpeg;base64,' + data.detected_image;
+            document.getElementById('video2').src = imgSrc;
             document.getElementById('video3').src = imgSrc;
         } else {
             console.log('No detected_image in data');
         }
     });
 </script>
-
 {% endblock javascripts %}
