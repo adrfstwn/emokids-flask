@@ -8,6 +8,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
     }
     .card-header {
         width: 100%;
@@ -15,30 +16,31 @@
     }
     .camera-preview {
         display: block;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 10px;
+    }
+    .detect-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>
 {% endblock stylesheets %}
 
 {% block content %}
-<!-- [ Konten Utama ] start -->
+
 <div class="pcoded-main-container">
     <div class="pcoded-wrapper">
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
-                <!-- [ breadcrumb ] start -->
-                <!-- [ breadcrumb ] end -->
                 <div class="main-body">
                     <div class="page-wrapper">
-                        <!-- [ Konten Utama ] start -->
                         <div class="card">
                             <div class="card-header">
                                 <h5>Live Kamera (*Real Time)</h5>
                             </div>
                             <div class="card-block px-0 py-3">
                                 <div class="table-responsive">
-                                    <img id="video" class="camera-preview" width="900" height="580">
+                                    <video id="videoElement" class="camera-preview" width="800" height="500" autoplay></video>
                                 </div>
                             </div>
                         </div>
@@ -47,13 +49,13 @@
                                 <h5>Live Detect (*Real Time)</h5>
                             </div>
                             <div class="card-block px-0 py-3">
-                                <div class="table-responsive">
-                                    <img id="video2" class="camera-preview" width="800" height="550">
+                                <div class="table-responsive detect-container">
+                                    <img id="video2" class="camera-preview" width="400" height="275">
+                                    <img id="video3" class="camera-preview" width="400" height="275">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <!--[ Recent Users ] start-->
                             <div class="col-xl-8 col-md-6">
                                 <div class="card Recent-Users">
                                     <div class="card-header">
@@ -64,57 +66,22 @@
                                             <table class="table table-hover">
                                                 <tbody>
                                                 <tr class="unread">
-                                                    <td><img class="rounded-circle" style="width:40px;"
-                                                                src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user">
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="mb-1">Emosi Tantrum</h6>
-                                                        <p class="m-0">Lorem Ipsum is simply…</p>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="text-muted"><i
-                                                                class="fas fa-circle text-c-green f-10 m-r-15"></i>11
-                                                            MAY 12:56</h6>
-                                                    </td>
-                                                    <td><a href="#!"
-                                                            
-                                                            href="#!" class="label theme-bg text-white f-12">Lihat</a>
-                                                    </td>
+                                                    <td><img class="rounded-circle" style="width:40px;" src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user"></td>
+                                                    <td><h6 class="mb-1">Emosi Tantrum</h6><p class="m-0">Lorem Ipsum is simply…</p></td>
+                                                    <td><h6 class="text-muted"><i class="fas fa-circle text-c-green f-10 m-r-15"></i>11 MAY 12:56</h6></td>
+                                                    <td><a href="#!" class="label theme-bg text-white f-12">Lihat</a></td>
                                                 </tr>
                                                 <tr class="unread">
-                                                    <td><img class="rounded-circle" style="width:40px;"
-                                                        src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user">
-                                            </td>
-                                                    <td>
-                                                        <h6 class="mb-1">Emosi Tantrum</h6>
-                                                        <p class="m-0">Lorem Ipsum is simply text of…</p>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="text-muted"><i
-                                                                class="fas fa-circle text-c-red f-10 m-r-15"></i>11 MAY
-                                                            10:35</h6>
-                                                    </td>
-                                                    <td><a
-                                                            
-                                                            href="#!" class="label theme-bg text-white f-12">Lihat</a>
-                                                    </td>
+                                                    <td><img class="rounded-circle" style="width:40px;" src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user"></td>
+                                                    <td><h6 class="mb-1">Emosi Tantrum</h6><p class="m-0">Lorem Ipsum is simply text of…</p></td>
+                                                    <td><h6 class="text-muted"><i class="fas fa-circle text-c-red f-10 m-r-15"></i>11 MAY 10:35</h6></td>
+                                                    <td><a href="#!" class="label theme-bg text-white f-12">Lihat</a></td>
                                                 </tr>
                                                 <tr class="unread">
-                                                    <td><img class="rounded-circle" style="width:40px;"
-                                                        src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user">
-                                            </td>
-                                                    <td>
-                                                        <h6 class="mb-1">Emosi Tantrum</h6>
-                                                        <p class="m-0">Lorem Ipsum is simply…</p>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="text-muted"><i
-                                                                class="fas fa-circle text-c-green f-10 m-r-15"></i>9 MAY
-                                                            17:38</h6>
-                                                    </td>
-                                                    <td>
-                                                            <a href="#!" class="label theme-bg text-white f-12">Lihat</a>
-                                                    </td>
+                                                    <td><img class="rounded-circle" style="width:40px;" src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user"></td>
+                                                    <td><h6 class="mb-1">Emosi Tantrum</h6><p class="m-0">Lorem Ipsum is simply…</p></td>
+                                                    <td><h6 class="text-muted"><i class="fas fa-circle text-c-green f-10 m-r-15"></i>9 MAY 17:38</h6></td>
+                                                    <td><a href="#!" class="label theme-bg text-white f-12">Lihat</a></td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -122,74 +89,72 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--[ Recent Users ] end-->
-                        
-                            <div class="col-md-6 col-xl-4">
-                                <div class="card card-social">
-                                    <div class="card-block border-bottom">
-                                        <div class="row align-items-center justify-content-center">
-                                            <div class="col-auto">
-                                                <img class="rounded-circle" style="width:100px;"
-                        src="{{ config.ASSETS_ROOT }}/images/logo.png" alt="activity-user">
-                                            </div>
-                                            <div class="col text-right">
-                                                <h3>500</h3>
-                                                <h5 class="text-c-blue mb-0">Total Riwayat Emosi Siswa<span
-                                                        </span></h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-block">
-                                        <div class="row align-items-center justify-content-center card-active">
-                                            <div class="col-6">
-                                                <h6 class="text-center m-b-10"><span
-                                                        class="text-muted m-r-5">Jumlah Siswa</span>25,998</h6>
-                                                <div class="progress">
-                                                    <div class="progress-bar progress-c-theme" role="progressbar"
-                                                            style="width:80%;height:6px;" aria-valuenow="80"
-                                                            aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <h6 class="text-center  m-b-10"><span
-                                                        class="text-muted m-r-5">Jumlah User</span>7,753</h6>
-                                                <div class="progress">
-                                                    <div class="progress-bar progress-c-theme2" role="progressbar"
-                                                            style="width:50%;height:6px;" aria-valuenow="50"
-                                                            aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                        <!-- [ Konten Utama ] end -->
+                        <!-- [ Main Content ] end -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- [ Konten Utama ] end -->            
+
 {% endblock content %}
 
 {% block javascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
 <script>
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    const videoElement = document.getElementById('videoElement');
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
 
-    socket.on('connect', function() {
-        console.log('Connected to SocketIO server');
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                videoElement.srcObject = stream;
+            })
+            .catch(function(err) {
+                console.log("Something went wrong: " + err);
+            });
+    } else {
+        alert('getUserMedia not supported on your browser!');
+    }
+
+    videoElement.addEventListener('play', function() {
+        const draw = () => {
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            fetch('/process_image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: imageData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('video2').src = data.detected_image;
+            })
+            .catch(error => console.error('Error:', error));
+
+            setTimeout(draw, 100); // Adjust the interval as needed
+        };
+
+        canvas.width = videoElement.videoWidth;
+        canvas.height = videoElement.videoHeight;
+        draw();
     });
 
+    const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
     socket.on('new_frame', function(data) {
-        console.log('Received new frame data');
-        document.getElementById('video').src = 'data:image/jpeg;base64,' + data.original_image;
-        document.getElementById('video2').src = 'data:image/jpeg;base64,' + data.detected_image;
+        console.log('Received new frame data:', data);
+        if (data.detected_image) {
+            // Prefix the base64 string with the appropriate data URL prefix
+            const imgSrc = 'data:image/jpeg;base64,' + data.detected_image;
+            document.getElementById('video3').src = imgSrc;
+        } else {
+            console.log('No detected_image in data');
+        }
     });
-
 </script>
 {% endblock javascripts %}
-
-
-
