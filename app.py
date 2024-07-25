@@ -1,6 +1,8 @@
 from apps import create_app, socketio, db
 from apps.models import PoseData
 import logging
+import logging.handlers
+import os
 import cv2
 import base64
 import time
@@ -9,7 +11,29 @@ from ultralytics import YOLO
 from flask import request, jsonify
 
 app = create_app()
-logging.basicConfig(level=logging.DEBUG)
+# Ensure the log directory exists
+log_dir = "logs"
+if not os.path.exists(log_dir):
+    try:
+        os.makedirs(log_dir)
+    except OSError as e:
+        print(f"Error creating log directory: {e}")
+        raise
+
+# Configure logging
+log_file = os.path.join(log_dir, "error.log")
+try:
+    log_handler = logging.handlers.RotatingFileHandler(
+        log_file, maxBytes=10000, backupCount=1)
+    log_handler.setLevel(logging.ERROR)
+    log_formatter = logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
+    log_handler.setFormatter(log_formatter)
+    app.logger.addHandler(log_handler)
+    logging.basicConfig(level=logging.DEBUG)
+except Exception as e:
+    print(f"Error setting up logging: {e}")
+    raise
 
 model = YOLO("ekspresi_ncnn_model")
 
